@@ -1,0 +1,87 @@
+<html>
+
+<head>
+    <title>Mesmerize Me</title>
+    <script src="paper-full.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <script src="howler.js"></script>
+    <script type="text/paperscript" canvas="myCanvas">
+        var circleCount = 0;
+        var myCircle = new Path.Circle({
+            center: view.center,
+            radius: 0,
+            fillColor: 'red'
+        });
+        var circleArray; 
+        //generate and play a song
+        function generateSongNumber() {
+            var sound = new Howl({
+                src: ['sounds/' + Math.floor((Math.random() * 26) + 1) + '.mp3']
+            });
+            sound.play();
+        }
+        //function to generate a random color
+        function generateRandomColor() {
+            var r, g, b;
+            r = Math.floor((Math.random() * 255) + 1);
+            g = Math.floor((Math.random() * 255) + 1);;
+            b = Math.floor((Math.random() * 255) + 1);
+            return [r, g, b];
+        }
+
+        //function to get the total number of circles to pop between 1 and 6
+        function getTotalCircles() {
+            return Math.floor((Math.random() * 6) + 1);
+        }
+
+        //function to get the coordinates for the circle
+        function getCoordinatesForCircle() {
+            var x, y;
+            x = Math.floor((Math.random() * 1000) + 1);
+            y = Math.floor((Math.random() * 1000) + 1);
+            return [x, y];
+        }
+
+        //function to genrate the radius of the circle
+        function generateRadius() {
+            return Math.floor((Math.random() * 150) + 50);
+        }
+        //function to generate a circle and animate it on keypress
+        function onKeyDown(event) {
+            circleArray = new Array();
+            var totalCirclesToGenerate = getTotalCircles();
+            circleCount = totalCirclesToGenerate;
+            for (var i = 0; i < totalCirclesToGenerate; i++) {
+                //get the coordinates for the circle to generate
+                var coordinate = getCoordinatesForCircle();
+                var x = coordinate[0];
+                var y = coordinate[1];
+                var RgbColor = generateRandomColor();
+                //generate a circle at the point
+                myCircle = new Path.Circle(new Point(x, y), generateRadius());
+                var r,g,b;
+                r = RgbColor[0];
+                g = RgbColor[1];
+                b = RgbColor[2];
+                myCircle.fillColor = "rgb(" + r + "," + b + "," + g + ")";
+               circleArray.push(myCircle);
+            }
+            console.log(circleArray);
+            generateSongNumber();
+        }
+        function onFrame(event) {
+            for (var i = 0; i <  circleCount; i++) {
+                var circle = circleArray[i];
+                circle.scale(0.6);
+            }
+        }
+       
+    </script>
+</head>
+
+<body>
+    <canvas id="myCanvas" resize></canvas>
+    <!-- <script src="script.js"></script> -->
+</body>
+
+</html>
